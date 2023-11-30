@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Contador</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+    />
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        color: #ecf0f1;
+        font-family: "Montserrat", sans-serif;
+        overflow: hidden;
+      }
+      counter-component {
+        display: block;
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        background: linear-gradient(45deg, #3498db, #9b59b6);
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        width: 300px;
+        overflow: hidden;
+        animation: changeColor 15s infinite;
+      }
+
+      @keyframes changeColor {
+        0% {
+          background: linear-gradient(45deg, #3498db, #9b59b6);
+        }
+        50% {
+          background: linear-gradient(45deg, #3498db, #9b59b6);
+        }
+        100% {
+          background: linear-gradient(45deg, #3498db, #9b59b6);
+        }
+      }
+
+      p {
+        font-size: 48px;
+        margin: 20px 0;
+        color: #ecf0f1;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        transition: text-shadow 0.5s;
+      }
+
+      p:hover {
+        text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      button {
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        color: #ecf0f1;
+        border: none;
+        padding: 15px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 18px;
+        margin: 10px 5px;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      button:hover {
+        background: linear-gradient(45deg, #27ae60, #21945c);
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <counter-component></counter-component>
+
+    <script src="https://unpkg.com/gsap@3.9.0/dist/gsap.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"
+      defer
+    ></script>
+    <script>
+      class CounterComponent extends HTMLElement {
+        constructor() {
+          super();
+          this._counter = 0;
+        }
+
+        connectedCallback() {
+          this.render();
+          this.attachListeners();
+          this.animateEntrance();
+          this.animateBackground();
+        }
+
+        render() {
+          this.innerHTML = `
+      <p class="animate__animated animate__fadeInDown">Count: ${this._counter}</p>
+      <button id="increment" class="animate__animated animate__fadeInLeft">+</button>
+      <button id="decrement" class="animate__animated animate__fadeInRight">-</button>
+    `;
+        }
+
+        attachListeners() {
+          const incrementButton = this.querySelector("#increment");
+          const decrementButton = this.querySelector("#decrement");
+
+          incrementButton.addEventListener("click", () => {
+            this._counter++;
+            this.updateCounterDisplay();
+            this.animateUpdate();
+          });
+
+          decrementButton.addEventListener("click", () => {
+            this._counter--;
+            this.updateCounterDisplay();
+            this.animateUpdate();
+          });
+        }
+
+        updateCounterDisplay() {
+          const counterElement = this.querySelector("p");
+          counterElement.textContent = `Count: ${this._counter}`;
+        }
+
+        animateEntrance() {
+          gsap.from(this, { opacity: 0, y: -50, duration: 1, ease: "power2.out" });
+        }
+
+        animateUpdate() {
+          gsap.fromTo(
+            this,
+            { scale: 1.2 },
+            { scale: 1, duration: 0.5, ease: "elastic.out(1, 0.3)" }
+          );
+        }
+
+        animateBackground() {
+          gsap.to(this, {
+            keyframes: [
+              { backgroundColor: "#3498db", duration: 5 },
+              { backgroundColor: "#9b59b6", duration: 5 },
+              { backgroundColor: "#3498db", duration: 5 },
+            ],
+            repeat: -1,
+          });
+        }
+      }
+
+      customElements.define("counter-component", CounterComponent);
+    </script>
+  </body>
+</html>
